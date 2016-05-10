@@ -53,8 +53,7 @@ class ReplyBox extends React.Component {
           <div className= "alert alert-warning">
               <strong>Too long: ... { overflowText } </strong>
 
-          </div>
-             )
+          </div>)
     } else {
         return '';
       }
@@ -81,6 +80,32 @@ class ReplyBox extends React.Component {
             className="btn btn-default pull-right">
             { !this.state.photoAdded ? 'Add Photo' : 'Photo Added' }
           </button>
+      </div>)
+  }
+}
+
+class Post extends React.Component {
+
+    _renderReplies() {
+        return (
+          <div>
+            <h3>Replies:</h3>
+            { this.props.post.replies.map((reply, index)=> {
+              return (
+                <h3 key={index}>
+                  { reply.text }
+                </h3>
+              )
+            })}
+          </div>)
+    }
+
+  render () {
+    return (
+      <div>
+        <h1>{this.props.post.title}</h1>
+        { this.props.post.replies.length ? this._renderReplies() : ''}
+        <ReplyBox post={this.props.post}/>
       </div>
     )
   }
@@ -88,37 +113,17 @@ class ReplyBox extends React.Component {
 
 class App extends React.Component {
 
-  _renderReplies(post) {
-      return (
-        <div>
-          <h3>Replies:</h3>
-          { post.replies.map((reply, index)=> {
-            return (
-              <h3 key={index}>
-                { reply.text }
-              </h3>
-            )
-          })}
-        </div>)
-  }
-
-
   render() {
     return (<div>
       <h1>Post & Replies</h1>
         { posts.map((post, index)=>{
-          return (
-            <div key={index}>
-              <h1>{post.title}</h1>
-              { post.replies.length ? this._renderReplies(post) : ''}
-              <ReplyBox post={post}/>
-            </div>
-          )
-        })}
-    </div>
-    )
+          return (<Post post={post} key={index}/>)
+        }) }
+    </div>)
   }
 }
+
+
 
 ReactDOM.render(<App/>, document.getElementById('react-app'));
 
