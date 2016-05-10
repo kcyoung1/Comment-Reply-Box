@@ -3,7 +3,9 @@ import * as ReactDOM from 'react-dom';
 
 require ('./main.scss');
 
-// Our first components!
+// Components
+import Post from './post';
+
 
 const posts = [
   { title: "Awesome Post 1", replies:[
@@ -17,121 +19,6 @@ const posts = [
   ]}
 ]
 
-
-class ReplyBox extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      text: "",
-      photoAdded: false
-    };
-  }
-
-  _handleChange(event) {
-    this.setState({ text: event.target.value });
-  }
-
-  _togglePhoto() {
-      this.setState({ photoAdded: !this.state.photoAdded });
-    }
-
-  _remainingChars() {
-    if (this.state.photoAdded) {
-      return 140 - 27 - this.state.text.length;
-    } else {
-      return 140 - this.state.text.length;
-    }
-  }
-
-  _overflowAlert() {
-
-    const overflowText = this.state.photoAdded ? this.state.text.substring((140 - 27), this.state.text.length) : this.state.text.substring(140, this.state.text.length)
-
-    if(this._remainingChars() < 0) {
-        return (
-          <div className= "alert alert-warning">
-              <strong>Too long: ... { overflowText } </strong>
-
-          </div>)
-    } else {
-        return '';
-      }
-    }
-
-  _submitReply(){
-    this.props.submitReply(this.state.text);
-  }
-
-  render () {
-    return (
-      <div className="well clearfix">
-          { this._overflowAlert() }
-          <h5>Replying to : { this.props.post.title }</h5>
-          <textarea
-              onChange={this._handleChange.bind(this)} className="form-control"/>
-            <br/>
-          <span>
-            { this._remainingChars() }
-          </span>
-          <button
-            onClick={this._submitReply.bind(this)}
-            className="btn btn-primary pull-right"
-
-            disabled={ this.state.text.length === 0 && !this.state.photoAdded }>
-              Post Reply
-            </button>
-          <button
-            onClick={this._togglePhoto.bind(this)}
-            className="btn btn-default pull-right">
-            { !this.state.photoAdded ? 'Add Photo' : 'Photo Added' }
-          </button>
-      </div>)
-  }
-}
-
-class Post extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      replies: this.props.post.replies
-    };
-  }
-
-  _submitReply(text){
-    this.state.replies.push({  text });
-    this.setState({ replies: this.state.replies });
-  }
-
-    _renderReplies() {
-        return (
-          <div>
-            <h3>Replies:</h3>
-            { this.state.replies.map((reply, index)=> {
-              return (
-                <h3 key={index}>
-                  { reply.text }
-                </h3>
-
-              )
-            })}
-          </div>)
-    }
-
-  render () {
-    return (
-      <div>
-        <h1>{this.props.post.title}</h1>
-        { this.state.replies.length ? this._renderReplies() : ''}
-        <ReplyBox
-          post={this.props.post}
-          submitReply={ this._submitReply.bind(this) }
-          />
-      </div>
-    )
-  }
-}
 
 class App extends React.Component {
 
@@ -148,6 +35,8 @@ class App extends React.Component {
 
 
 ReactDOM.render(<App/>, document.getElementById('react-app'));
+
+// Our first components!
 
 // class LightSwitch extends React.Component {
 //
