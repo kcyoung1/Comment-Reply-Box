@@ -25,7 +25,7 @@ class ReplyBox extends React.Component {
     this.state = {
       text: "",
       photoAdded: false
-    }
+    };
   }
 
   _handleChange(event) {
@@ -59,17 +59,23 @@ class ReplyBox extends React.Component {
       }
     }
 
+  _submitReply(){
+    this.props.submitReply(this.state.text);
+  }
+
   render () {
     return (
       <div className="well clearfix">
           { this._overflowAlert() }
           <h5>Replying to : { this.props.post.title }</h5>
-          <textarea    onChange={this._handleChange.bind(this)} className="form-control"/>
+          <textarea
+              onChange={this._handleChange.bind(this)} className="form-control"/>
             <br/>
           <span>
             { this._remainingChars() }
           </span>
           <button
+            onClick={this._submitReply.bind(this)}
             className="btn btn-primary pull-right"
 
             disabled={ this.state.text.length === 0 && !this.state.photoAdded }>
@@ -86,15 +92,28 @@ class ReplyBox extends React.Component {
 
 class Post extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      replies: this.props.post.replies
+    };
+  }
+
+  _submitReply(text){
+    this.state.replies.push({  text });
+    this.setState({ replies: this.state.replies });
+  }
+
     _renderReplies() {
         return (
           <div>
             <h3>Replies:</h3>
-            { this.props.post.replies.map((reply, index)=> {
+            { this.state.replies.map((reply, index)=> {
               return (
                 <h3 key={index}>
                   { reply.text }
                 </h3>
+
               )
             })}
           </div>)
@@ -104,8 +123,11 @@ class Post extends React.Component {
     return (
       <div>
         <h1>{this.props.post.title}</h1>
-        { this.props.post.replies.length ? this._renderReplies() : ''}
-        <ReplyBox post={this.props.post}/>
+        { this.state.replies.length ? this._renderReplies() : ''}
+        <ReplyBox
+          post={this.props.post}
+          submitReply={ this._submitReply.bind(this) }
+          />
       </div>
     )
   }
