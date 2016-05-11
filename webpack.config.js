@@ -1,10 +1,8 @@
 var path = require('path');
-var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        main: './src/main.jsx',
-        'main-jquery': './src/main-jquery.js'
+        main: './src/main.jsx'
     },
     output: {
         filename: '[name].js',
@@ -39,11 +37,5 @@ module.exports = {
     },
     resolve: {
         extensions: ['', '.js', '.jsx']
-    },
-    plugins: [
-        new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery"
-        })
-    ]
+    }
 }
